@@ -70,86 +70,101 @@ TaskHandle_t threadings;
 void webServerInit();
 
 
-// var(variable), val(value).                  
-void serialCtrl(){
-  if (Serial.available()){
+// var(variable), val(value).
+void serialCtrl() {
+  if (Serial.available()) {
     // Read the JSON document from the "link" serial port
     DeserializationError err = deserializeJson(docReceive, Serial);
 
-    if (err == DeserializationError::Ok){
+    if (err == DeserializationError::Ok) {
       UPPER_TYPE = 1;
       docReceive["val"].as<int>();
 
       int val = docReceive["val"];
 
-      if(docReceive["var"] == "funcMode"){
+      if (docReceive["var"] == "funcMode") {
         debugMode = 0;
         gestureUD = 0;
         gestureLR = 0;
-        if(val == 1){
-          if(funcMode == 1){funcMode = 0;Serial.println("Steady OFF");}
-          else if(funcMode == 0){funcMode = 1;Serial.println("Steady ON");}
+        if (val == 1) {
+          if (funcMode == 1) {
+            funcMode = 0;
+            Serial.println("Steady OFF");
+          }
+          else if (funcMode == 0) {
+            funcMode = 1;
+            Serial.println("Steady ON");
+          }
         }
-        else{
+        else {
           funcMode = val;
           Serial.println(val);
         }
       }
 
-      else if(docReceive["var"] == "move"){
+      else if (docReceive["var"] == "move") {
         debugMode = 0;
         funcMode  = 0;
         digitalWrite(BUZZER, HIGH);
-        switch(val){
-          case 1: moveFB = 1; Serial.println("Forward");break;
-          case 2: moveLR =-1; Serial.println("TurnLeft");break;
-          case 3: moveFB = 0; Serial.println("FBStop");break;
-          case 4: moveLR = 1; Serial.println("TurnRight");break;
-          case 5: moveFB =-1; Serial.println("Backward");break;
-          case 6: moveLR = 0; Serial.println("LRStop");break;
+
+        switch (val) {
+          case 1: moveFB = 1; Serial.println("Forward"); break;
+          case 2: moveLR = -1; Serial.println("TurnLeft"); break;
+          case 3: moveFB = 0; Serial.println("FBStop"); break;
+          case 4: moveLR = 1; Serial.println("TurnRight"); break;
+          case 5: moveFB = -1; Serial.println("Backward"); break;
+          case 6: moveLR = 0; Serial.println("LRStop"); break;
         }
       }
 
-      else if(docReceive["var"] == "ges"){
+      else if (docReceive["var"] == "ges") {
         debugMode = 0;
         funcMode  = 0;
-        switch(val){
-          case 1: gestureUD += gestureSpeed;if(gestureUD > gestureOffSetMax){gestureUD = gestureOffSetMax;}break;
-          case 2: gestureUD -= gestureSpeed;if(gestureUD <-gestureOffSetMax){gestureUD =-gestureOffSetMax;}break;
+        switch (val) {
+          case 1: gestureUD += gestureSpeed; if (gestureUD > gestureOffSetMax) {
+              gestureUD = gestureOffSetMax;
+            } break;
+          case 2: gestureUD -= gestureSpeed; if (gestureUD < -gestureOffSetMax) {
+              gestureUD = -gestureOffSetMax;
+            } break;
           case 3: break;
-          case 4: gestureLR -= gestureSpeed;if(gestureLR <-gestureOffSetMax){gestureLR =-gestureOffSetMax;}break;
-          case 5: gestureLR += gestureSpeed;if(gestureLR > gestureOffSetMax){gestureLR = gestureOffSetMax;}break;
+          case 4: gestureLR -= gestureSpeed; if (gestureLR < -gestureOffSetMax) {
+              gestureLR = -gestureOffSetMax;
+            } break;
+          case 5: gestureLR += gestureSpeed; if (gestureLR > gestureOffSetMax) {
+              gestureLR = gestureOffSetMax;
+            } break;
           case 6: break;
         }
         pitchYawRollHeightCtrl(gestureUD, gestureLR, 0, 0);
       }
 
-      else if(docReceive["var"] == "light"){
-        switch(val){
-          case 0: setSingleLED(0,matrix.Color(0, 0, 0));setSingleLED(1,matrix.Color(0, 0, 0));break;
-          case 1: setSingleLED(0,matrix.Color(0, 32, 255));setSingleLED(1,matrix.Color(0, 32, 255));break;
-          case 2: setSingleLED(0,matrix.Color(255, 32, 0));setSingleLED(1,matrix.Color(255, 32, 0));break;
-          case 3: setSingleLED(0,matrix.Color(32, 255, 0));setSingleLED(1,matrix.Color(32, 255, 0));break;
-          case 4: setSingleLED(0,matrix.Color(255, 255, 0));setSingleLED(1,matrix.Color(255, 255, 0));break;
-          case 5: setSingleLED(0,matrix.Color(0, 255, 255));setSingleLED(1,matrix.Color(0, 255, 255));break;
-          case 6: setSingleLED(0,matrix.Color(255, 0, 255));setSingleLED(1,matrix.Color(255, 0, 255));break;
-          case 7: setSingleLED(0,matrix.Color(255, 64, 32));setSingleLED(1,matrix.Color(32, 64, 255));break;
+      else if (docReceive["var"] == "light") {
+        switch (val) {
+          case 0: setSingleLED(0, matrix.Color(0, 0, 0)); setSingleLED(1, matrix.Color(0, 0, 0)); break;
+          case 1: setSingleLED(0, matrix.Color(0, 32, 255)); setSingleLED(1, matrix.Color(0, 32, 255)); break;
+          case 2: setSingleLED(0, matrix.Color(255, 32, 0)); setSingleLED(1, matrix.Color(255, 32, 0)); break;
+          case 3: setSingleLED(0, matrix.Color(32, 255, 0)); setSingleLED(1, matrix.Color(32, 255, 0)); break;
+          case 4: setSingleLED(0, matrix.Color(255, 255, 0)); setSingleLED(1, matrix.Color(255, 255, 0)); break;
+          case 5: setSingleLED(0, matrix.Color(0, 255, 255)); setSingleLED(1, matrix.Color(0, 255, 255)); break;
+          case 6: setSingleLED(0, matrix.Color(255, 0, 255)); setSingleLED(1, matrix.Color(255, 0, 255)); break;
+          case 7: setSingleLED(0, matrix.Color(255, 64, 32)); setSingleLED(1, matrix.Color(32, 64, 255)); break;
         }
       }
 
-      else if(docReceive["var"] == "buzzer"){
-        switch(val){
-          case 0: digitalWrite(BUZZER, HIGH);break;
-          case 1: digitalWrite(BUZZER, LOW);break;
+      else if (docReceive["var"] == "buzzer") {
+        switch (val) {
+          case 0: digitalWrite(BUZZER, HIGH); break;
+          case 1: digitalWrite(BUZZER, LOW); break;
         }
       }
     }
 
 
-      // else if(docReceive['var'] == "ip"){
-      //     UPPER_IP = docReceive['ip'];
-      // }
-     
+    // else if(docReceive['var'] == "ip"){
+    //     UPPER_IP = docReceive['ip'];
+    // }
+
 
     else {
       while (Serial.available() > 0)
@@ -159,8 +174,8 @@ void serialCtrl(){
 }
 
 
-void jsonSend(){
-  if(millis() - LAST_JSON_SEND > JSON_SEND_INTERVAL || millis() < LAST_JSON_SEND){
+void jsonSend() {
+  if (millis() - LAST_JSON_SEND > JSON_SEND_INTERVAL || millis() < LAST_JSON_SEND) {
     docSend["vol"] = loadVoltage_V;
     serializeJson(docSend, Serial);
     LAST_JSON_SEND = millis();
@@ -168,16 +183,16 @@ void jsonSend(){
 }
 
 
-void robotThreadings(void *pvParameter){
+void robotThreadings(void *pvParameter) {
   delay(3000);
-  while(1){
+  while (1) {
     serialCtrl();
     delay(25);
   }
 }
 
 
-void threadingsInit(){
+void threadingsInit() {
   xTaskCreate(&robotThreadings, "RobotThreadings", 4000, NULL, 5, &threadings);
 }
 
@@ -188,44 +203,51 @@ void setup() {
 
   // WIRE DEBUG INIT.
   wireDebugInit();
-  
+#if defined(BATTERY_M)
   // INA219 INIT.
   InitINA219();
-
+    Serial.println("init battery init");
+#endif
   // BUZZER INIT.
   InitBuzzer();
-
+    Serial.println("init buzzer init");
   // RGB INIT
   InitRGB();
-
+    Serial.println("init RGB init");
   // PCA9685 INIT.
   ServoSetup();
-
+    Serial.println("init servo init");
   // SSD1306 INIT.
   InitScreen();
-
+    Serial.println("init screen init");
   // EEPROM INIT.
   preferencesSetup();
-
+    Serial.println("init umps");
   // Standup for ICM20948 calibrating.
   delay(100);
-  setSingleLED(0,matrix.Color(0, 128, 255));
-  setSingleLED(1,matrix.Color(0, 128, 255));
-  standMassCenter(0, 0);GoalPosAll();delay(1000);
-  setSingleLED(0,matrix.Color(255, 128, 0));
-  setSingleLED(1,matrix.Color(255, 128, 0));
+  setSingleLED(0, matrix.Color(0, 128, 255));
+  setSingleLED(1, matrix.Color(0, 128, 255));
+  standMassCenter(0, 0); GoalPosAll(); delay(1000);
+  setSingleLED(0, matrix.Color(255, 128, 0));
+  setSingleLED(1, matrix.Color(255, 128, 0));
   delay(500);
 
   // ICM20948 INIT.
+#if defined(ICM20948)  
   InitICM20948();
-
+      Serial.println("20948");
+#endif
+#if defined(MPU6050)  
+  InitMPU6050();
+  Serial.println("6050");
+#endif
   // WEBCTRL INIT. WIFI settings included.
   webServerInit();
 
   // RGB LEDs on.
   delay(500);
-  setSingleLED(0,matrix.Color(0, 32, 255));
-  setSingleLED(1,matrix.Color(255, 32, 0));
+  setSingleLED(0, matrix.Color(0, 32, 255));
+  setSingleLED(1, matrix.Color(255, 32, 0));
 
   // update data on screen.
   allDataUpdate();
@@ -279,13 +301,13 @@ void loop() {
 
 
 // --- --- ---   --- --- ---   --- --- ---
-// BUZZER INIT. --- the device that make a sound.
+// BUZZER INIT. --- the device that make a sound.//in AI THINKER use lamp LED instead
 // InitBuzzer();
 
-// BUZZER on.
+// BUZZER on.//LED on
 // digitalWrite(BUZZER, HIGH);
 
-// BUZZER off.
+// BUZZER off.//LED off
 // digitalWrite(BUZZER, LOW);
 
 
@@ -300,7 +322,7 @@ void loop() {
 // <<<<<<<<<<<<=== Servos/Legs/Motion Ctrl ===>>>>>>>>>>>>>>>
 
 // --- --- ---   --- --- ---   --- --- ---
-// all servos move to the middle position of the program. 
+// all servos move to the middle position of the program.
 // the position that you have to debug it to make it moves to.
 // middlePosAll();
 

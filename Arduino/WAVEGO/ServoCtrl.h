@@ -48,12 +48,20 @@ double wiggleError = 0;
 //      .L-E
 //           .
 // ------------------------
+/*
 double Linkage_S = 12.2;    // The distance between two servos.
 double Linkage_A = 40.0;    // The linkage that connected with the servo.
 double Linkage_B = 40.0;    // The linkage that limit the direction.
 double Linkage_C = 39.8153; // The upper part of the leg.
 double Linkage_D = 31.7750; // The lower part of the leg.
 double Linkage_E = 30.8076; // The foot.
+*/
+double Linkage_S = 56.0;    // The distance between two servos.
+double Linkage_A = 40.0;    // The linkage that connected with the servo.
+double Linkage_B = 60.0;    // The linkage that limit the direction.
+double Linkage_C = 60.0;    // The upper part of the leg.
+double Linkage_D = 60.0;    // The lower part of the leg.
+double Linkage_E = 5.3;     // The foot.
 
 double WALK_HEIGHT_MAX  = 110;
 double WALK_HEIGHT_MIN  = 75;
@@ -532,7 +540,7 @@ void singleLegCtrl(uint8_t LegNum, double xPos, double yPos, double zPos){
   singleLegPlaneIK(Linkage_S, Linkage_A, Linkage_C, Linkage_D, Linkage_E, xPos, linkageBuffer[wiggleLen], alphaOut, xPosBuffer, yPosBuffer);
   simpleLinkageIK(Linkage_A, Linkage_B, linkageBuffer[yPosBuffer], (linkageBuffer[xPosBuffer]-Linkage_S/2), betaOut, betaB, betaC);
 
-  goalPWMSet(NumW, linkageBuffer[wiggleAlpha]);
+  goalPWMSet(NumW, linkageBuffer[wiggleAlpha]);//?commont out for 8 dof
   goalPWMSet(NumF, (90 - linkageBuffer[betaOut]));
   goalPWMSet(NumB, linkageBuffer[alphaOut]);
 }

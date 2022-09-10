@@ -6,14 +6,14 @@ const char* AP_SSID = "WAVESHARE Robot";
 const char* AP_PWD  = "1234567890";
 
 // WIFI_STA settings.
-const char* STA_SSID = "OnePlus 8";
-const char* STA_PWD  = "40963840";
+const char* STA_SSID = "WAVESHARE Robot";
+const char* STA_PWD  = "1234567890";
 
 // set the default wifi mode here.
 // 1 as [AP] mode, it will not connect other wifi.
 // also, 1 as upper computer control mode.
 // 2 as [STA] mode, it will connect to know wifi.
-#define DEFAULT_WIFI_MODE 1
+#define DEFAULT_WIFI_MODE 2
 extern int WIFIP_MODE;
 
 extern IPAddress IP_ADDRESS;
@@ -32,14 +32,13 @@ extern int WIFI_RSSI;
 #include "esp_timer.h"
 #include "esp_camera.h"
 #include "img_converters.h"
-
+/*
 #define CAMERA_MODEL_ESP_EYE
 #define PWDN_GPIO_NUM     -1
 #define RESET_GPIO_NUM    -1
 #define XCLK_GPIO_NUM     4
 #define SIOD_GPIO_NUM     18
 #define SIOC_GPIO_NUM     23
-
 #define Y9_GPIO_NUM       36
 #define Y8_GPIO_NUM       37
 #define Y7_GPIO_NUM       38
@@ -51,6 +50,27 @@ extern int WIFI_RSSI;
 #define VSYNC_GPIO_NUM    5
 #define HREF_GPIO_NUM     27
 #define PCLK_GPIO_NUM     25
+*/
+
+#define AI_THINKER
+#define PWDN_GPIO_NUM     32
+#define RESET_GPIO_NUM    -1
+#define XCLK_GPIO_NUM      0
+#define SIOD_GPIO_NUM     26
+#define SIOC_GPIO_NUM     27
+#define Y9_GPIO_NUM       35
+#define Y8_GPIO_NUM       34
+#define Y7_GPIO_NUM       39
+#define Y6_GPIO_NUM       36
+#define Y5_GPIO_NUM       21
+#define Y4_GPIO_NUM       19
+#define Y3_GPIO_NUM       18
+#define Y2_GPIO_NUM        5
+#define VSYNC_GPIO_NUM    25
+#define HREF_GPIO_NUM     23
+#define PCLK_GPIO_NUM     22
+
+
 
 extern int MiddlePosition;
 extern int moveFB;
@@ -112,6 +132,14 @@ void wifiInit(){
   WIFI_MODE = DEFAULT_WIFI_MODE;
   if(WIFI_MODE == 1){setAP();}
   else if(WIFI_MODE == 2){setSTA();}
+    while (WiFi.status() != WL_CONNECTED) {
+    delay(500);
+    Serial.print(".");
+  }
+  Serial.println("");
+  Serial.print("Connected to ");
+  Serial.print("IP address: ");
+  Serial.println(WiFi.localIP());
 }
 
 
